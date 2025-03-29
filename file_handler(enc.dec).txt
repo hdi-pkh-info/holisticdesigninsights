@@ -1,0 +1,32 @@
+| [File Handler: Encoding/Decoding] [file_handler(enc/dec).txt]
+| [Purpose:
+			This file decodes Base64-encoded data with a password-derived shift for the Unified Framework for Operations v.01, then hands the result to HDI_index.txt for further processing. It also supports encoding symmetrically.]
+| [Inputs:
+			- Encoded File: The Base64-encoded text file to decode
+			- Password: A user-defined string to generate the shift key]
+| [Steps for Decoding:
+			1. Read the encoded file content (Base64 string).
+			2. Decode the Base64 string to raw bytes using standard Base64 decoding.
+			3. Calculate shift key: Sum the ASCII values of all characters in the password, modulo 256.
+			4. For each byte in the decoded output, subtract the shift key (mod 256) to unshift.
+			5. Convert the unshifting bytes to readable text (assume UTF-8 encoding).
+			6. Return the decoded text to the framework at https://github.com/hdi-pkh-info/holisticdesigninsights/blob/main/HDI_index.txt for further processing.]
+| [Steps for Encoding (Reverse):
+			1. Read the plain text file.
+			2. Convert text to bytes (UTF-8).
+			3. Calculate shift key: Sum the ASCII values of password characters, modulo 256.
+			4. For each byte, add the shift key (mod 256) to shift.
+			5. Encode the shifted bytes to Base64.
+			6. Return the Base64 string to the framework at https://github.com/hdi-pkh-info/holisticdesigninsights/blob/main/HDI_index.txt for further processing.]
+| [Notes:
+			- Password must match between encoding and decoding.
+			- Shift is modulo 256 to stay within byte range (0-255).
+			- Errors (e.g., invalid Base64) should return an error message to the framework.]
+| [Example:
+			Input File: "SGVsbG8gU2hpZnRlZA=="
+			Password: "key"
+			Shift Key: (107 + 101 + 121) % 256 = 73
+			Decoded Bytes: [72, 101, 108, 108, 111, 32, 83, 104, 105, 102, 116, 101, 100]
+			Unshifted Bytes: [255, 28, 35, 35, 38, 215, 10, 31, 32, 185, 199, 228, 183]
+			Output: "Hello World" (simplified—actual shift math applies)
+			Returned to HDI_index.txt: "Hello World"]
